@@ -25,8 +25,9 @@ class FileStorage():
         Return: objects'''
         if cls is None:
             return FileStorage.__objects
-        return {key: value for key, value in FileStorage.__objects.items()
-                if isinstance(value, cls)}
+        else:
+            return {key: value for key, value in FileStorage.__objects.items()
+                    if isinstance(value, cls)}
 
     def new(self, obj):
         '''sets in __objects the obj with key
