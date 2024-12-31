@@ -66,6 +66,7 @@ class HBNBCommand(cmd.Cmd):
                     else:
                         value = int(value)
                     setattr(instance, key, value)
+                    storage.save()
                 except (TypeError, ValueError):
                     continue
             storage.save()
