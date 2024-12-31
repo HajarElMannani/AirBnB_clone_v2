@@ -53,10 +53,27 @@ class HBNBCommand(cmd.Cmd):
         if (len(args) < 1):
             print("** class name missing **")
         elif (args[0] in HBNBCommand.__class):
-            print("{}".format(eval(args[0])().id))
+            instance = eval(args[0])()
+            for kwargs in args[1:]:
+                try:
+                    key, value = kwargs.split("=", 1)
+                    if (value.startswith('"')) and (value.endswith('"')):
+                        value = value[1:-1]
+                        value = value.replace("_", " ")
+                        value = value.replace('\\"','"' )
+                    elif "." in value:
+                        value = float(value)
+                    else:
+                        value = int(value)
+                    setattr(instance, key, value)
+                except (TypeError, ValueError):
+                    continue
             storage.save()
+            print("{}".format(eval(args[0])().id))
+
         else:
             print("** class doesn't exist **")
+                       
 
     def do_show(self, arg):
         ''' Prints the string representation of an instance
