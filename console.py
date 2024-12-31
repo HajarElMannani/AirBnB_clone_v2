@@ -58,7 +58,7 @@ class HBNBCommand(cmd.Cmd):
                 try:
                     key, value = kwargs.split("=", 1)
                     if (value.startswith('"')) and (value.endswith('"')):
-                        value = value[1:-1]
+                        value = value.strip('"')
                         value = value.replace("_", " ")
                         value = value.replace('\\"','"' )
                     elif "." in value:
