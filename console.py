@@ -53,6 +53,7 @@ class HBNBCommand(cmd.Cmd):
         args = arg.split()
         if (len(args) < 1):
             print("** class name missing **")
+            return
         elif (args[0] in HBNBCommand.__class):
             instance = eval(args[0])()
             for kwargs in args[1:]:
@@ -67,15 +68,14 @@ class HBNBCommand(cmd.Cmd):
                     else:
                         value = int(value)
                     setattr(instance, key, value)
-                    instance.save()
                 except (TypeError, ValueError):
                     continue
             instance.save()
-            print("{}".format(eval(args[0])().id))
+            print("{}".format(instance.id))
 
         else:
             print("** class doesn't exist **")
-                       
+            return           
 
     def do_show(self, arg):
         ''' Prints the string representation of an instance
