@@ -38,9 +38,14 @@ class Place(BaseModel, Base):
     amenity_ids = []
 
     reviews = relationship("Review", backref="place", cascade='delete')
+    amenities = relationship("Amenity", backref="place_amenities"secondary=place_amenity, viewonly=False)
+    
+    place_amenity = Table("place_amenity", Base.metadata, Column('place_id', String(60), PrimaryKey=True, Foreign_key('places.id'), nullable=False), Column('amenity_id', String(60), Primarykey=True, Foreign_key('amenities.id'), nullable=False))
 
     if (getenv("HBNB_TYPE_STORAGE", None) != "db"):
         @property
         def reviews(self):
             rev_instances = [inst_review for inst_review in storage.all(Review).values() if inst_review.place_id == self.id]
             return rev_instances
+
+    
