@@ -119,12 +119,20 @@ class HBNBCommand(cmd.Cmd):
         Arguments:
             arg(str): arguments
         '''
-        if (arg in HBNBCommand.__class) or (not arg):
+        if not arg:
             list_inst = []
             for obj in storage.all().values():
                 list_inst.append(obj.__str__())
             print(list_inst)
-        else:
+            return
+        try:
+            args = arg.split(" ")
+            if args[0] not in HBNBCommand.__class:
+                raise NameError()
+
+            obj = storage.all(eval(args[0]))
+            print([obj[key].__str__() for key in obj])
+        except NameError:
             print("** class doesn't exist **")
 
     def do_update(self, arg):
