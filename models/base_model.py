@@ -3,11 +3,18 @@
 import uuid
 from datetime import datetime
 import models
+from sqlalchemy import Column, String, DateTime
+from sqlalchemy.ext.declarative import declarative_base
+Base = declarative_base()
 
 
 class BaseModel():
     '''class that defines all common attributes/methods for other classes'''
-
+    
+    id = Column(String(60), nullable=False, primary_key=True)
+    created_at = Column(DateTime, nullable=False, default=datetime.utcnow())
+    updated_at = Column(DateTime, nullable=False, default=datetime.utcnow())
+    
     def __init__(self, *args, **kwargs):
         '''instantiation of class BaseModel
         args:
@@ -25,12 +32,11 @@ class BaseModel():
                        isinstance(value, str):
                         value = datetime.strptime(value, date_format)
                     setattr(self, key, value)
-        else:
-            models.storage.new(self)
 
     def __str__(self):
         '''return string representation
         Return: string representation'''
+        self.__dict__.pop("_sa_instance_state", None)
         return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
 
     def save(self):
@@ -38,15 +44,22 @@ class BaseModel():
         current datetime
         Return: Current datetime'''
         self.updated_at = datetime.now()
+        models.storage.new(self)
         models.storage.save()
 
     def to_dict(self):
         '''returns a dictionary containing all keys/values of __dict__
         of the instance
         Return: dictionary'''
-        return {
-            **self.__dict__,
-            "created_at": self.created_at.isoformat(),
-            "updated_at": self.updated_at.isoformat(),
-            "__class__": self.__class__.__name__,
-        }
+        new_dict = self.__dict__.copy()
+        new_dict["created_at"] = self.created_at.isoformat()
+        new_dict["updated_at"] = self.updated_at.isoformat()
+        new_dict["__class__"] =  str(self.__class__.__name__)
+        new_dict.pop("_sa_instance_state", None)
+        return new_dict
+        
+    def delete(self):
+        '''Method that deletes the current instance from the storage
+        (models.storage) by calling the method delete
+        Return: Nothing'''
+        models.storage.delete(self)

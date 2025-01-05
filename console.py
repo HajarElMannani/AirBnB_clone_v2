@@ -3,6 +3,7 @@
  of the command interpreter'''
 import cmd
 import re
+from shlex import split
 from models.base_model import BaseModel
 from models.user import User
 from models import storage
@@ -66,10 +67,10 @@ class HBNBCommand(cmd.Cmd):
                     else:
                         value = int(value)
                     setattr(instance, key, value)
-                    storage.save()
+                    instance.save()
                 except (TypeError, ValueError):
                     continue
-            storage.save()
+            instance.save()
             print("{}".format(eval(args[0])().id))
 
         else:
