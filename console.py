@@ -3,7 +3,6 @@
  of the command interpreter'''
 import cmd
 import re
-from shlex import split
 from models.base_model import BaseModel
 from models.user import User
 from models import storage
