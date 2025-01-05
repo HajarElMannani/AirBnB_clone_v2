@@ -11,10 +11,14 @@ from os import getenv
 
 
 table_a = Table("place_amenity", Base.metadata,
-                Column('place_id', String(60), Primary_Key=True,
-                       ForeignKey('places.id'), nullable=False),
-                Column('amenity_id', String(60), Primary_key=True,
-                       ForeignKey('amenities.id'), nullable=False))
+                Column('place_id', String(60),
+                       ForeignKey('places.id'),
+                       primary_Key=True, nullable=False),
+                Column('amenity_id', String(60),
+                       ForeignKey('amenities.id'),
+                       primary_Key=True, nullable=False))
+
+
 class Place(BaseModel, Base):
     '''class that inherits from BaseModel
     Attributes:
@@ -43,22 +47,26 @@ class Place(BaseModel, Base):
     amenity_ids = []
 
     reviews = relationship("Review", backref="place", cascade='delete')
-    amenities = relationship("Amenity", backref="place_amenities"secondary=place_amenity, viewonly=False)
-    
+    amenities = relationship("Amenity", backref="place_amenity",
+                             secondary='place_amenity', viewonly=False)
+
     if (getenv("HBNB_TYPE_STORAGE", None) != "db"):
         @property
         def reviews(self):
-            rev_instances = [inst_review for inst_review in storage.all(Review).values() if inst_review.place_id == self.id]
+            rev_instances = [inst_review
+                             for inst_review in storage.all(Review).values()
+                             if inst_review.place_id == self.id]
             return rev_instances
 
         @property
         def amenities(self):
             '''amenities getter'''
-            return [amenity for amenity in list(models.storage.all(Amenity).values()) if amenity.id in self.amenity_ids]
+            return [amenity for amenity
+                    in list(models.storage.all(Amenity).values())
+                    if amenity.id in self.amenity_ids]
 
         @amenities.setter
         def amenities(self, obj):
             '''amenities setter '''
             if isinstance(obj, Amenity):
                     self.amenity_ids.append(obj.id)
-                    

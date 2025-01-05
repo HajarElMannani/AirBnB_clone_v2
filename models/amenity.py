@@ -11,6 +11,6 @@ class Amenity(BaseModel, Base):
     Attributes:
         name(str): empty string'''
 
-    __tablename__ == "amenities"
+    __tablename__ = "amenities"
     name = Column(String(128), nullable=False)
     place_amenities = relationship("Place", viewonly=False, secondary='place_amenity')
