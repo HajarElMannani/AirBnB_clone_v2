@@ -48,4 +48,16 @@ class Place(BaseModel, Base):
             rev_instances = [inst_review for inst_review in storage.all(Review).values() if inst_review.place_id == self.id]
             return rev_instances
 
-    
+        @property
+        def amenities(self):
+            '''amenities getter'''
+            from models import storage
+            return [storage.get("Amenity", amenity_id) for amenity_id in self.amenity_ids]
+
+        @amenities.setter
+        def amenities(self, obj):
+            '''amenities setter '''
+            if isinstance(obj, Amenity):
+                if obj.id not in self.amenity_ids:
+                    self.amenity_ids.append(obj.id)
+                    
