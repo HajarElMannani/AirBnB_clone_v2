@@ -10,6 +10,11 @@ from models.review import Review
 from os import getenv
 
 
+table_a = Table("place_amenity", Base.metadata,
+                Column('place_id', String(60), Primary_Key=True,
+                       ForeignKey('places.id'), nullable=False),
+                Column('amenity_id', String(60), Primary_key=True,
+                       ForeignKey('amenities.id'), nullable=False))
 class Place(BaseModel, Base):
     '''class that inherits from BaseModel
     Attributes:
@@ -40,8 +45,6 @@ class Place(BaseModel, Base):
     reviews = relationship("Review", backref="place", cascade='delete')
     amenities = relationship("Amenity", backref="place_amenities"secondary=place_amenity, viewonly=False)
     
-    table_a = Table("place_amenity", Base.metadata, Column('place_id', String(60), Primary_Key=True, ForeignKey('places.id'), nullable=False), Column('amenity_id', String(60), Primary_key=True, ForeignKey('amenities.id'), nullable=False))
-
     if (getenv("HBNB_TYPE_STORAGE", None) != "db"):
         @property
         def reviews(self):
