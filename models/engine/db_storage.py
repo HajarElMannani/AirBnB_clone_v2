@@ -30,7 +30,7 @@ class DBStorage():
     def all(self, cls=None):
         '''query on the current database session (self.__session) all objects depending of the class name (argument cls)'''
         if cls is None:
-            clsses = [User, State, City, Amenity, Place, Review}
+            clsses = [State, City, Amenity, Place, Review, User]
             for clss in clsses:
                 instances = self.__session.query(clss).all()
         else:
