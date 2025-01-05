@@ -17,6 +17,9 @@ class State(BaseModel, Base):
     if (getenv("HBNB_TYPE_STORAGE") != 'db'):
         @property
         def cities(self):
-            '''Getter attribute that returns the list of City instances with state_id equals to the current State.id'''
-            instaces = [city_inst for city_inst in storage.all(City).values() if (city_inst.state_id == self.id)]
+            '''Getter attribute that returns the list of City instances
+            with state_id equals to the current State.id'''
+            instaces = [city_inst
+                        for city_inst in storage.all(City).values()
+                        if (city_inst.state_id == self.id)]
             return instances

@@ -13,7 +13,7 @@ class Review(BaseModel, Base):
         place_id(str): the Place.id
         user_id(str): the User.id
         text(str): empty string'''
-    
+
     __tablename__ = "reviews"
     place_id = Column(String(60), ForeignKey("places.id"), nullable=False)
     user_id = Column(String(60), ForeignKey("users.id"), nullable=False)

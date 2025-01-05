@@ -15,20 +15,23 @@ from os import getenv
 
 class DBStorage():
     '''db storage engine'''
-    
+
     __engine = None
     __session = None
-    
+
     def __init__(self):
         '''instantiation of engine'''
-        self.__engine = create_engine(f"mysql+mysqldb://{getenv('HBNB_MYSQL_USER')}:{getenv('HBNB_MYSQL_PWD')}@{getenv('HBNB_MYSQL_HOST')}/{getenv('HBNB_MYSQL_DB')}", pool_pre_ping=True)
+        self.__engine = create_engine(f"mysql+mysqldb://\
+        {getenv('HBNB_MYSQL_USER')}:{getenv('HBNB_MYSQL_PWD')}\
+        @{getenv('HBNB_MYSQL_HOST')}\
+        /{getenv('HBNB_MYSQL_DB')}",
+                                      pool_pre_ping=True)
         if getenv("HBNB_ENV") == 'test':
             Base.metadata.drop_all(self.__engine)
 
-#        Base.metadata.create_all(self.__engine)
-        
     def all(self, cls=None):
-        '''query on the current database session (self.__session) all objects depending of the class name (argument cls)'''
+        '''query on the current database session (self.__session) all
+        objects depending of the class name (argument cls)'''
         if cls is None:
             clsses = [State, City, Amenity, Place, Review, User]
             for clss in clsses:
@@ -37,8 +40,9 @@ class DBStorage():
             if type(cls) == str:
                 cls = eval(cls)
                 instances = self.__session.query(cls)
-        return {"{}.{}".format(type(instance).__name__, instance.id): instance for instance in instances}
-           
+        return {"{}.{}".format(type(instance).__name__, instance.id): instance
+                for instance in instances}
+
     def new(self, obj):
         '''Add the object to the current database session (self.__session)'''
         self.__session.add(obj)
@@ -58,4 +62,3 @@ class DBStorage():
         session_make = sessionmaker(bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(session_make)
         self.__session = Session()
-
