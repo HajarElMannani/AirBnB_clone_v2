@@ -29,28 +29,16 @@ class DBStorage():
         
     def all(self, cls=None):
         '''query on the current database session (self.__session) all objects depending of the class name (argument cls)'''
-#        if cls == None:
-#           clsses = [User, State, City, Amenity, Place, Review}
-#          for clss in clsses:
-#             instances = self.__session.query(clss).all()
-#    else:
-#        if type(cls) == str:
-#            cls = eval(cls)
-#        instances = self.__session.query(cls)
-#return {"{}.{}".format(type(instance).__name__, instance.id): instance for instance in instances}
         if cls is None:
-            objs = self.__session.query(State).all()
-            objs.extend(self.__session.query(City).all())
-            objs.extend(self.__session.query(User).all())
-            objs.extend(self.__session.query(Place).all())
-            objs.extend(self.__session.query(Review).all())
-            objs.extend(self.__session.query(Amenity).all())
+            clsses = [User, State, City, Amenity, Place, Review}
+            for clss in clsses:
+                instances = self.__session.query(clss).all()
         else:
             if type(cls) == str:
                 cls = eval(cls)
-            objs = self.__session.query(cls)
-        return {"{}.{}".format(type(o).__name__, o.id): o for o in objs}
-    
+                instances = self.__session.query(cls)
+        return {"{}.{}".format(type(instance).__name__, instance.id): instance for instance in instances}
+           
     def new(self, obj):
         '''Add the object to the current database session (self.__session)'''
         self.__session.add(obj)
