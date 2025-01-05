@@ -1,9 +1,13 @@
 #!/user/bin/python3
 '''class Place'''
+import models
 from models.base_model import BaseModel
 from models.base_model import Base
-from sqlalchemy import Column, Integer, String,Float, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, ForeignKey
 from sqlalchemy.orm import relationship
+from models.amenity import Amenity
+from models.review import Review
+from os import getenv
 
 
 class Place(BaseModel, Base):
@@ -33,9 +37,10 @@ class Place(BaseModel, Base):
     longitude = Column(Float, nullable=False)
     amenity_ids = []
 
-    reviews = relationship('Review', back_populates='places', cascade='delete')
+    reviews = relationship("Review", backref="place", cascade='delete')
 
-    @property
-    def reviews(self):
-        rev_instances = [inst_review for inst_review in storage.all(Review).values() if inst_review.place_id == self.id]
-        return rev_instances
+    if (getenv("HBNB_TYPE_STORAGE", None) != "db"):
+        @property
+        def reviews(self):
+            rev_instances = [inst_review for inst_review in storage.all(Review).values() if inst_review.place_id == self.id]
+            return rev_instances

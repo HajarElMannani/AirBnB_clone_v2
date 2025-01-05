@@ -7,7 +7,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy import Column, String, ForeignKey
 
 
-class Review(BaseModel):
+class Review(BaseModel, Base):
     '''class that inherits from BaseModel
     Attributes:
         place_id(str): the Place.id
