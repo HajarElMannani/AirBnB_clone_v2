@@ -40,7 +40,7 @@ class Place(BaseModel, Base):
     reviews = relationship("Review", backref="place", cascade='delete')
     amenities = relationship("Amenity", backref="place_amenities"secondary=place_amenity, viewonly=False)
     
-    place_amenity = Table("place_amenity", Base.metadata, Column('place_id', String(60), PrimaryKey=True, Foreign_key('places.id'), nullable=False), Column('amenity_id', String(60), Primarykey=True, Foreign_key('amenities.id'), nullable=False))
+    table_a = Table("place_amenity", Base.metadata, Column('place_id', String(60), Primary_Key=True, ForeignKey('places.id'), nullable=False), Column('amenity_id', String(60), Primary_key=True, ForeignKey('amenities.id'), nullable=False))
 
     if (getenv("HBNB_TYPE_STORAGE", None) != "db"):
         @property
@@ -51,13 +51,11 @@ class Place(BaseModel, Base):
         @property
         def amenities(self):
             '''amenities getter'''
-            from models import storage
-            return [storage.get("Amenity", amenity_id) for amenity_id in self.amenity_ids]
+            return [amenity for amenity in list(models.storage.all(Amenity).values()) if amenity.id in self.amenity_ids]
 
         @amenities.setter
         def amenities(self, obj):
             '''amenities setter '''
             if isinstance(obj, Amenity):
-                if obj.id not in self.amenity_ids:
                     self.amenity_ids.append(obj.id)
                     
