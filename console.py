@@ -62,7 +62,7 @@ class HBNBCommand(cmd.Cmd):
                     if (value.startswith('"')) and (value.endswith('"')):
                         value = value.strip('"')
                         value = value.replace("_", " ")
-                        value = value.replace('\\"','"' )
+                        value = value.replace('\\"', '"')
                     elif "." in value:
                         value = float(value)
                     else:
@@ -75,7 +75,7 @@ class HBNBCommand(cmd.Cmd):
 
         else:
             print("** class doesn't exist **")
-            return           
+            return
 
     def do_show(self, arg):
         ''' Prints the string representation of an instance
