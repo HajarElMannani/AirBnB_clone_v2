@@ -14,15 +14,16 @@ def do_deploy(archive_path):
     try:
         file_path = archive_path.split('/')[-1]
         put(archive_path, f'/tmp/{file_path}')
-        extract_file = "data/web_static/releases/{}/".format(file_path.split('.')[0])
-        run(f'rm -rf {extract_file}/')
-        run(f'mkdir -p {extract_file}/')
-        run(f'tar -xzf /tmp/{file_path} -C {extract_file}')
+        file_extract = file_path.split('.')[0]
+        extracted_file = "data/web_static/releases/{}/".format(file_extract)
+        run(f'rm -rf {extracted_file}/')
+        run(f'mkdir -p {extracted_file}/')
+        run(f'tar -xzf /tmp/{file_path} -C {extracted_file}')
         run(f'rm  /tmp/{file_path}')
-        run(f'mv {extract_file}/web_static/* {extract_file}')
-        run(f'rm -rf {extract_file}/web_static')
+        run(f'mv {extracted_file}web_static/* {extracted_file}')
+        run(f'rm -rf {extracted_file}web_static')
         run('rm -rf /data/web_static/current')
-        run(f'ln -s {extract_file} /data/web_static/current')
+        run(f'ln -s {extracted_file} /data/web_static/current')
     except Exception:
         return False
     return True
