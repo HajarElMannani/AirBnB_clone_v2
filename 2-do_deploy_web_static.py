@@ -11,16 +11,16 @@ def do_deploy(archive_path):
     using the function do_deploy'''
     if (path.isfile(archive_path) is False):
         return False
-    file_path = archive_path.split('/')[-1]
     try:
+        file_path = archive_path.split('/')[-1]
         put(archive_path, f'/tmp/{file_path}')
-        extract_file = "data/web_static/releases/{}/".format(archive_path.rsplit('.')[0])
+        extract_file = "data/web_static/releases/{}/".format(file_path.split('.')[0])
         run(f'rm -rf {extract_file}/')
         run(f'mkdir -p {extract_file}/')
         run(f'tar -xzf /tmp/{file_path} -C {extract_file}')
         run(f'rm  /tmp/{file_path}')
         run(f'mv {extract_file}/web_static/* {extract_file}')
-        run('rm -rf {extract_file}/web_static')
+        run(f'rm -rf {extract_file}/web_static')
         run('rm -rf /data/web_static/current')
         run(f'ln -s {extract_file} /data/web_static/current')
     except Exception:
