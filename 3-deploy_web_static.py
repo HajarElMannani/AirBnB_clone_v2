@@ -6,8 +6,8 @@ from fabric.api import put, run
 from fabric.api import env
 from os import path
 
-env.hosts = ['54.236.45.210', '54.197.82.208']
-
+env.hosts = ["54.236.45.210", "54.197.82.208"]
+env.port = 22
 
 def do_pack():
     '''generates a .tgz archive from the contents
