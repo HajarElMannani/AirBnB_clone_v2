@@ -29,25 +29,32 @@ def do_deploy(archive_path):
     using the function do_deploy'''
     if (path.isfile(archive_path) is False):
         return False
+
     try:
         file_path = archive_path.split('/')[-1]
         file_extract = file_path.split('.')[0]
         extracted_file = "/data/web_static/releases/"
-        put(archive_path, "/tmp/")
-        run("mkdir -p {}{}".format(extracted_file, file_extract))
-        run("tar -xzf /tmp/{} -C {}{}".format(file_path, extracted_file,
-                                              file_extract))
-        run("rm  /tmp/{}".format(file_path))
-        run("mv {0}{1}/web_static/* {0}{1}".format(extracted_file,
-                                                   file_extract))
-        run("rm -rf {}{}/web_static".format(extracted_file, file_extract))
-        run("rm -rf /data/web_static/current")
-        run("ln -s {}{}/ /data/web_static/current".format(extracted_file,
-                                                          file_extract))
+        if put(archive_path, "/tmp/").failed:
+            return False
+        if run(f"mkdir -p {extracted_file}{file_extract}").failed:
+            return False
+        if run(f"tar -xzf /tmp/{file_path} -C {extracted_file}{file_extract}").failed:
+            return False
+        if run(f"rm /tmp/{file_path}").failed:
+            return False
+        if run(f"mv {extracted_file}{file_extract}/web_static/* {extracted_file}{file_extract}/").failed:
+            return False
+        if run(f"rm -rf {extracted_file}{file_extract}/web_static").failed:
+            return False
+        if run("rm -rf /data/web_static/current").failed:
+            return False
+        if run(f"ln -s {extracted_file}{file_extract}/ /data/web_static/current").failed:
+            return False
+
         print("New version deployed!")
         return True
     except Exception as e:
-        print("Error: {}".format(e))
+        print(f"Error: {e}")
         return False
 
 
