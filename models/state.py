@@ -10,9 +10,16 @@ import models
 
 class State(BaseModel, Base):
     '''class state'''
-    __tablename__ = "states"
-    name = Column(String(128), nullable=False)
-    cities = relationship('City', backref='state', cascade="delete")
+    if (getenv("HBNB_TYPE_STORAGE") == 'db'):
+        __tablename__ = "states"
+        name = Column(String(128), nullable=False)
+        cities = relationship('City', backref='state', cascade="delete")
+    else:
+        name = ""
+
+    def __init__(self, *args, **kwargs):
+        """instantiate state"""
+        super().__init__(*args, **kwargs)
 
     if (getenv("HBNB_TYPE_STORAGE") != 'db'):
         @property

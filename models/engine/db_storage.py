@@ -1,5 +1,7 @@
 #!usr/bin/python3
 '''New engine DBStorage'''
+import models
+import sqlalchemy
 from sqlalchemy import create_engine
 from models.base_model import Base
 from models.base_model import BaseModel
@@ -28,16 +30,17 @@ class DBStorage():
     def all(self, cls=None):
         '''query on the current database session (self.__session) all
         objects depending of the class name (argument cls)'''
-        if cls is None:
-            clsses = [State, City, Amenity, Place, Review, User]
-            for clss in clsses:
-                instances = self.__session.query(clss).all()
-        else:
-            if type(cls) == str:
-                cls = eval(cls)
-                instances = self.__session.query(cls)
-        return {"{}.{}".format(type(instance).__name__, instance.id): instance
-                for instance in instances}
+        clsses = {"Amenity": Amenity, "City": City,
+           "Place": Place, "Review": Review, "State": State, "User": User}
+        #clsses = ["State", "City", "Amenity", "Place", "Review", "User"]
+        dict_new = {}
+        for clss in clsses:
+            if cls is None or cls is clss:
+                instances = self.__session.query(clsses[clss]).all()
+                for instance in instances:
+                    key = instance.__class__.__name__ + '.' + instance.id
+                    dict_new[key] = instance
+        return dict_new
 
     def new(self, obj):
         '''Add the object to the current database session (self.__session)'''
@@ -57,7 +60,7 @@ class DBStorage():
         Base.metadata.create_all(self.__engine)
         session_make = sessionmaker(bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(session_make)
-        self.__session = Session()
+        self.__session = Session
 
     def close(self):
         '''call remove() method on the private session 
