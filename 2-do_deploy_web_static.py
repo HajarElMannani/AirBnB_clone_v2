@@ -11,6 +11,7 @@ env.user = 'ubuntu'
 env.hosts = ['54.236.45.210', '54.197.82.208']
 env.port = 22
 
+
 def do_deploy(archive_path):
     '''distributes an archive to your web servers,
     using the function do_deploy'''
