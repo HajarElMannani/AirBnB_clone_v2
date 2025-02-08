@@ -10,7 +10,7 @@ import models
 
 class State(BaseModel, Base):
     '''class state'''
-    if (getenv("HBNB_TYPE_STORAGE") == 'db'):
+    if (models.getenv("HBNB_TYPE_STORAGE") == 'db'):
         __tablename__ = "states"
         name = Column(String(128), nullable=False)
         cities = relationship('City', backref='state', cascade="delete")
@@ -21,12 +21,13 @@ class State(BaseModel, Base):
         """instantiate state"""
         super().__init__(*args, **kwargs)
 
-    if (getenv("HBNB_TYPE_STORAGE") != 'db'):
+    if (models.getenv("HBNB_TYPE_STORAGE") != 'db'):
         @property
         def cities(self):
             '''Getter attribute that returns the list of City instances
             with state_id equals to the current State.id'''
-            instaces = [city_inst
-                        for city_inst in storage.all(City).values()
-                        if (city_inst.state_id == self.id)]
-            return instances
+            city_list = []
+            for city in list(models.storage.all(City).values()):
+                if city.state_id == self.id:
+                    city_list.append(city)
+            return city_list
