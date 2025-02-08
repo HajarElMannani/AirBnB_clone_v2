@@ -8,6 +8,7 @@ from fabric.api import env
 from os import path
 
 env.hosts = ["54.236.45.210", "54.197.82.208"]
+env.user = "ubuntu"
 env.port = 22
 
 
@@ -15,13 +16,12 @@ def do_pack():
     '''generates a .tgz archive from the contents
     of the web_static folder'''
     time_now = datetime.now().strftime('%Y%m%d%H%M%S')
-    archive_name = f"versions/web_static_{time_now}.tgz"
+    archive_name = f"web_static_{time_now}.tgz"
     local('mkdir -p versions')
-    try:
-        local(f'tar -cvzf {archive_name} web_static')
-    except Exception:
+    res = local(f'tar -cvzf versions/{archive_name} web_static', capture=True)
+    if res.failed:
         return None
-    return archive_name
+    return f"versions/{archive_name}"
 
 
 def do_deploy(archive_path):
