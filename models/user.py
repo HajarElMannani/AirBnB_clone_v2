@@ -10,16 +10,14 @@ from os import getenv
 
 class User(BaseModel, Base):
     '''class that inherits fron BaseModel'''
-    def __init__(self, *args, **kwargs):
-        """instantiation"""
-        super().__init__(*args, **kwargs)
 
-    if models.getenv('HBNB_TYPE_STORAGE') == 'db':
+    if getenv('HBNB_TYPE_STORAGE') == 'db':
         __tablename__ = "users"
+        id = Column(String(60), primary_key=True, nullable=False)
         email = Column(String(128), nullable=False)
         password = Column(String(128), nullable=False)
-        first_name = Column(String(128), nullable=False)
-        last_name = Column(String(128), nullable=False)
+        first_name = Column(String(128), nullable=True)
+        last_name = Column(String(128), nullable=True)
         places = relationship('Place', backref='user', cascade="delete")
         reviews = relationship('Review', backref='user', cascade="delete")
     else:

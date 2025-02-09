@@ -1,4 +1,4 @@
-#!/user/bin/python3
+#!/usr/bin/python3
 '''class Place'''
 import models
 from models.base_model import BaseModel
@@ -6,13 +6,12 @@ from models.base_model import Base
 import sqlalchemy
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, Table
 from sqlalchemy.orm import relationship
-from models.amenity import Amenity
 from models.review import Review
 from os import getenv
 
 
-if models.getenv('HBNB_TYPE_STORAGE') == 'db':
-    table_a = Table("place_amenity", Base.metadata, Column('place_id', String(60), ForeignKey('places.id'), primary_key=True, nullable=False), Column('amenity_id', String(60), ForeignKey('amenities.id'), primary_key=True, nullable=False))
+if getenv('HBNB_TYPE_STORAGE') == 'db':
+    place_amenity = Table("place_amenity", Base.metadata, Column('place_id', String(60), ForeignKey('places.id'), primary_key=True, nullable=False), Column('amenity_id', String(60), ForeignKey('amenities.id'), primary_key=True, nullable=False))
 
 
 class Place(BaseModel, Base):
@@ -29,7 +28,7 @@ class Place(BaseModel, Base):
         latitude(float): 0.0
         longitude(float): 0.0
         amenity_ids(list): empty list: it will be the list of Amenity.id'''
-    if models.getenv('HBNB_TYPE_STORAGE') == 'db':
+    if getenv('HBNB_TYPE_STORAGE') == 'db':
         __tablename__ = 'places'
         city_id = Column(String(60), ForeignKey('cities.id'), nullable=False)
         user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
@@ -41,8 +40,8 @@ class Place(BaseModel, Base):
         price_by_night = Column(Integer, default=0)
         latitude = Column(Float)
         longitude = Column(Float)
-        reviews = relationship("Review", backref="place")
-        amenities = relationship("Amenity", backref="place_amenities", secondary='place_amenity', viewonly=False)
+        reviews = relationship('Review', backref='place', cascade='delete')
+        amenities = relationship('Amenity', secondary=place_amenity, viewonly=False)
     else:
         city_id = ""
         user_id = ""
@@ -56,11 +55,7 @@ class Place(BaseModel, Base):
         longitude = 0.0
         amenity_ids = []
 
-    def __init__(self, *args, **kwargs):
-        """initializes Place"""
-        super().__init__(*args, **kwargs)
-        
-    if models.getenv("HBNB_TYPE_STORAGE") != 'db':
+    if getenv("HBNB_TYPE_STORAGE") != 'db':
         @property
         def reviews(self):
             from models.review import Review

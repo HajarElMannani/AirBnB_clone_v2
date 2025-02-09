@@ -1,4 +1,4 @@
-#!/user/bin/python3
+#!/usr/bin/python3
 '''contains classes State'''
 from models.base_model import BaseModel, Base
 from models.city import City
@@ -10,18 +10,14 @@ import models
 
 class State(BaseModel, Base):
     '''class state'''
-    if (models.getenv("HBNB_TYPE_STORAGE") == 'db'):
+    if getenv("HBNB_TYPE_STORAGE") == 'db':
         __tablename__ = "states"
+        id = Column(String(60), primary_key=True, nullable=False)
         name = Column(String(128), nullable=False)
-        cities = relationship('City', backref='state', cascade="delete")
+        cities = relationship('City', backref='state', cascade="all")
     else:
         name = ""
 
-    def __init__(self, *args, **kwargs):
-        """instantiate state"""
-        super().__init__(*args, **kwargs)
-
-    if (models.getenv("HBNB_TYPE_STORAGE") != 'db'):
         @property
         def cities(self):
             '''Getter attribute that returns the list of City instances
