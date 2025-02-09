@@ -17,7 +17,8 @@ def states():
 @app.route('/states/<id>', strict_slashes=False)
 def state_with_city(id):
     '''Displays the state'''
-    for state in storage.all("State").values():
+    states = storage.all(State).values()
+    for state in states:
         if state.id == id:
             return render_template("9-states.html", state=state)
     return render_template("9-states.html")
