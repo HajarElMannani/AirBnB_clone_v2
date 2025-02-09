@@ -6,6 +6,7 @@ from models import storage
 
 app = Flask(__name__)
 
+
 @app.route('/states', strict_slashes=False)
 def states():
     '''Displays all states'''
@@ -28,6 +29,7 @@ def state_with_city(id):
 def teardown(exception):
     '''Closes the storage'''
     storage.close()
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
