@@ -2,7 +2,6 @@
 '''Script that starts a Flask application'''
 
 from flask import Flask, render_template
-from models import *
 from models import storage
 
 app = Flask(__name__)
@@ -12,6 +11,7 @@ app = Flask(__name__)
 def cities_by_states():
     '''Display the states and cities'''
     states = [state for state in storage.all("State").values()]
+    states = sorted(states, key=lambda y: y.name)
     return render_template('8-cities_by_states.html', states=states)
 
 
