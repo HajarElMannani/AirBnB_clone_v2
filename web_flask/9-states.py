@@ -17,12 +17,12 @@ def states():
 @app.route('/states/<id>', strict_slashes=False)
 def state_with_city(id):
     '''Displays the state'''
-    state = storage.get("State", id)
-    if state:
-        cities = sorted(state.cities, key=lambda c: c.name)
-        return render_template('9-states.html', state=state, cities=cities)
+    for state in storage.all("State").values():
+        if state.id == id:
+            return render_template("9-states.html", state=state)
+    return render_template("9-states.html")
 
-    
+
 @app.teardown_appcontext
 def teardown(exception):
     '''Closes the storage'''
