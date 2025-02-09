@@ -31,7 +31,6 @@ class DBStorage():
     def all(self, cls=None):
         '''query on the current database session (self.__session) all
         objects depending of the class name (argument cls)'''
-        clsses = ["User", "State", "City", "Place", "Amenity", "Reviw"]
         dict_new = {}
         if cls:
             if type(cls) == str:
@@ -39,10 +38,10 @@ class DBStorage():
             else:
                 instances = self.__session.query(cls).all()
         else:
-            instances = [self.__session.query(clss) for clss in clsses]
+            instances = [self.__session.query(clss) for clss in [User, State, City, Place, Amenity, Review]]
         for clss in instances:
-            key = "{}.{}".format(clss.__class__.__name__,clss.id)
-            dict_new[key] = obj
+            key = "{}.{}".format(clss.__class__.__name__, clss.id)
+            dict_new[key] = clss
         return dict_new
 
     def new(self, obj):

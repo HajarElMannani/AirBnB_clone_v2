@@ -6,20 +6,19 @@ from models.base_model import BaseModel, Base
 from sqlalchemy import String, Column
 from sqlalchemy.orm import relationship
 from os import getenv
-
+from models.place import Place
+from models.review import Review
 
 class User(BaseModel, Base):
     '''class that inherits fron BaseModel'''
-
+    __tablename__ = "users"
     if getenv('HBNB_TYPE_STORAGE') == 'db':
-        __tablename__ = "users"
-        id = Column(String(60), primary_key=True, nullable=False)
         email = Column(String(128), nullable=False)
         password = Column(String(128), nullable=False)
         first_name = Column(String(128), nullable=True)
         last_name = Column(String(128), nullable=True)
-        places = relationship('Place', backref='user', cascade="delete")
-        reviews = relationship('Review', backref='user', cascade="delete")
+        places = relationship('Place', backref='user', cascade="delete-orphan, all")
+        reviews = relationship('Review', backref='user', cascade="delete-orphan, all")
     else:
         email = ""
         password = ""

@@ -10,11 +10,10 @@ import models
 
 class State(BaseModel, Base):
     '''class state'''
+    __tablename__ = "states"
     if getenv("HBNB_TYPE_STORAGE") == 'db':
-        __tablename__ = "states"
-        id = Column(String(60), primary_key=True, nullable=False)
         name = Column(String(128), nullable=False)
-        cities = relationship('City', backref='state', cascade="all")
+        cities = relationship('City', backref='state', cascade="all, delete-orphan")
     else:
         name = ""
 
